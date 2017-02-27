@@ -114,10 +114,6 @@ public class WebRoleManagerImpl implements WebRoleManager, WebUserManager, WebGr
     private Group getBackingGroup(String groupName) {
         try {
             return m_groupManager.getGroup(groupName);
-        } catch (MarshalException e) {
-            throw new WebRolesException("Error marshalling groups.xml config file", e);
-        } catch (ValidationException e) {
-            throw new WebRolesException("Error validating groups.xml config file", e);
         } catch (IOException e) {
             throw new WebRolesException("Error reading groups.xml config file", e);
         }
@@ -126,10 +122,6 @@ public class WebRoleManagerImpl implements WebRoleManager, WebUserManager, WebGr
     private Collection<Group> getBackingGroups() {
         try {
             return m_groupManager.getGroups().values();
-        } catch (MarshalException e) {
-            throw new WebRolesException("Error marshalling groups.xml config file", e);
-        } catch (ValidationException e) {
-            throw new WebRolesException("Error validating groups.xml config file", e);
         } catch (IOException e) {
             throw new WebRolesException("Error reading groups.xml config file", e);
         }
@@ -306,11 +298,13 @@ public class WebRoleManagerImpl implements WebRoleManager, WebUserManager, WebGr
         }
         @Override
         public Schedule getSchedule(int schedIndex) {
-            return m_role.getSchedule(schedIndex);
+            final int index = schedIndex;
+            return m_role.getSchedules().get(index);
         }
         @Override
         public Time getTime(int schedIndex, int timeIndex) {
-            return getSchedule(schedIndex).getTime(timeIndex);
+            final int index = timeIndex;
+            return getSchedule(schedIndex).getTimes().get(index);
         }
     }
     
@@ -332,7 +326,7 @@ public class WebRoleManagerImpl implements WebRoleManager, WebUserManager, WebGr
         }
         
         private List<String> getUsers(Group group) {
-            return group.getUserCollection();
+            return group.getUsers();
         }
     }
 
